@@ -1,0 +1,16 @@
+{
+  "name": "go-live",
+  "version": "1.0.0",
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "cli-table": "^0.3.0",
+    "express": "latest",
+    "gulp": "latest",
+    "jade": "^1.11.0",
+    "mongodb": "^2.0.40",
+    "mongoose": "^4.0.6",
+    "xlsx": "^0.8.0",
+    "underscore-node": "^0.1.2",
+    "async": "^1.4.2"
+  }
+}
