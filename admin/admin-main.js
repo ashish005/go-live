@@ -11,11 +11,6 @@
         var app = angular.module(_appName, ['ui.bootstrap', 'ngRoute', 'goLive.core']);
 
         app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
-            /*$locationProvider.html5Mode({
-                enabled: true,
-                requireBase: true
-            });*/
-
             $routeProvider
                 .when('/home', angularAMD.route({}))
                 .otherwise({redirectTo: '/login'});//Handle all exceptions
