@@ -5,6 +5,7 @@ module.exports = function() {
     var express = require('express'),
         bodyParser = require('body-parser'),
         mongoose = require('mongoose'),
+        cors = require('cors'),
         http = require('http');
 
     var server = express(); // Set up an express server (but not starting it yet)
@@ -13,12 +14,14 @@ module.exports = function() {
     // this will let us get the data from a POST
     server.use(bodyParser.urlencoded({extended: true}));
     server.use(bodyParser.json());
+    server.use(cors());
 
     var port = process.env.PORT || 4000;        // set our port
     server.set('port', port);
 
     var serverConfig = {
-        basePath: './routers/'
+        basePath: './routers/',
+        dbUrl:'127.0.0.1:27017/goLive'
     };
 
     // Add live reload
@@ -26,11 +29,10 @@ module.exports = function() {
     //============================================================================
     var router = express.Router();// get an instance of the express Router
     require(serverConfig.basePath+'server.routers')(server, router, mongoose);//Define All routes here
-    /*server.use('/', express.static(__dirname + '/'));*/
 
-    mongoose.connect('mongodb://127.0.0.1:27017/shopDB', function (error, db) {
-        console.log('mongo error: ' + error);
-        console.log('mongo success: ' + db);
+
+    mongoose.connect('mongodb://'+ serverConfig.dbUrl, function (error, db) {
+        console.log('mongo database Url: ' + serverConfig.dbUrl);
     });
 
     server.listen(server.get('port'), function () {

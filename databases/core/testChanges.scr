@@ -1,0 +1,4 @@
+use am4it
+db.core.find({id: '1'}).forEach( function(item) { 
+  print(item); 
+});

@@ -1,7 +1,7 @@
 /**
  * Created by wizdev on 10/12/2015.
  */
-module.exports = function(router, mongoose) {
+module.exports = function(server, router, mongoose) {
     var db = mongoose.createConnection('mongodb://127.0.0.1:27017/shopDB');
     db.Schema = mongoose.Schema;
     var productCategory = require('./models/product-category.model.js')(db);

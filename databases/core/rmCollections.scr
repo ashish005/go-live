@@ -1,0 +1,2 @@
+use goLive
+db.core.drop()
