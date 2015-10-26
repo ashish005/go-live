@@ -310,7 +310,7 @@
                 $scope.submitLoginForm = function() {
                     var _req = {method: 'POST', url: 'api/core/signin', data: $scope.form};
                     ajaxRequest(_req, function(data, status, headers, config) {
-                        $location.path('/dashboard');// this callback will be called asynchronously when the response is available.
+                        $location.path('/product');// this callback will be called asynchronously when the response is available.
                     }, function(data, status, headers, config) {
                         console.log('error: ', data );// this callback will be called asynchronously when the response is available.
                     });
