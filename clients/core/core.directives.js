@@ -7,25 +7,25 @@
     define(['angularAMD'], function (angularAMD) {
         var _viewOptions = {
             login: {
-                templateUrl: 'admin-js/core/templates/login.html'
+                templateUrl: './core/templates/login.html'
             },
             register: {
-                templateUrl: 'admin-js/core/templates/register.html'
+                templateUrl: './core/templates/register.html'
             },
             forgot_password: {
-                templateUrl: 'admin-js/core/templates/forgot-password.html'
+                templateUrl: './core/templates/forgot-password.html'
             },
             lockscreen:{
-                templateUrl: 'admin-js/core/templates/lockscreen.html'
+                templateUrl: './core/templates/lockscreen.html'
             },
             400:{
-                templateUrl: 'admin-js/core/templates/error/page-not-found.html'
+                templateUrl: './core/templates/error/page-not-found.html'
             },
             500:{
-                templateUrl: 'admin-js/core/templates/error/internal-server-error.html'
+                templateUrl: './core/templates/error/internal-server-error.html'
             },
-            headerTemplateUrl: 'admin-js/core/templates/header.html',
-            iboxToolsTemplateUrl: 'admin-js/core/templates/common/ibox_tools.html'
+            headerTemplateUrl: './core/templates/header.html',
+            iboxToolsTemplateUrl: './core/templates/common/ibox_tools.html'
         };
 
         core.factory('authenticationFactory', ["$window", function ($window) {
@@ -129,6 +129,7 @@
                 .when('/lockscreen', _viewOptions['lockscreen'])
                 .when('/400', _viewOptions['400'])
                 .when('/500', _viewOptions['500'])
+
         }]);
 
         /**
@@ -265,8 +266,20 @@
                 };
             }])
             .directive('goLiveHeader', goLiveHeader)
-            .controller('authController', ['$scope', '$rootScope', '$http', '$location',
-            function ($scope, $rootScope, $http, $location) {
+            .directive('routeUi',['$location', function($location){
+                return {
+                    restrict: 'A',
+                    link:function(scope, element, attr){
+                        element.on('click', function(e){
+                            e.stopPropagation();
+                            window.location.hash= '#/'+this.attributes[0].value;
+                           //$location.path('/'+this.attributes[0].value);
+                        })
+
+                    }
+                };
+            }])
+            .controller('authController', ['$scope', '$rootScope', '$http', '$location', function ($scope, $rootScope, $http, $location) {
                 $scope.initLoginForm = function() {
                     $scope.form = {
                         email: 'me.ashish005@gmail.com',

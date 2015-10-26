@@ -1,43 +1,29 @@
 /**
- * Created by wizdev on 10/22/2015.
- */
-/**
- * Created by wizdev on 8/25/2015.
+ * Created by wizdev on 10/25/2015.
  */
 (function(window, require){
     "use strict";
     define(['angularAMD'], function (angularAMD) {
-        window.appName  = "goLive";
-        var _appName = window.appName;
-
-        var app = angular.module(_appName, ['ui.bootstrap', 'ngRoute', 'goLive.core']);
+        var _appName = window['name'];
+        var app = angular.module(_appName, ['ui.bootstrap', 'goLive.core']);
         var _baseModulesPath = {
-            templateUrl:'admin-js/modules/',
-            controllerUrl:'admin-js/modules/'
+            templateUrl:'shop-all/modules/',
+            controllerUrl:'modules/'
         };
 
-        var _adminRouteConfig = {
-            dashboard:{
-                templateUrl: _baseModulesPath.templateUrl +'dashboard/templates/dashboard.html',
-                controllerUrl: _baseModulesPath.controllerUrl +'dashboard/controllers/dashboard.controller',
-                access: {
-                    requiredLogin: true
-                },
-            },
-            users:{
-                templateUrl: _baseModulesPath.templateUrl +'users/templates/users.html',
-                controllerUrl: _baseModulesPath.controllerUrl +'users/controllers/users.controller',
+        var _shopAllRouteConfig = {
+            product:{
+                templateUrl: _baseModulesPath.templateUrl +'product/templates/product.html',
+                controllerUrl: _baseModulesPath.controllerUrl +'product/controllers/product.controller',
                 access: {
                     requiredLogin: true
                 },
             }
         };
 
-
         app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             $routeProvider
-                .when('/dashboard', angularAMD.route(_adminRouteConfig.dashboard))
-                .when('/users', angularAMD.route(_adminRouteConfig.users))
+                .when('/product', angularAMD.route(_shopAllRouteConfig.product))
                 .otherwise({redirectTo: '/login'});//Handle all exceptions
         }]);
 

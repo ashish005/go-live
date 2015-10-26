@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-md-12 col-xs-12">
+        <div class="form-inline well well-lg">
+            <div class="col-md-3 col-xs-12">
+                <select name="format"><option value="csv" selected="">CSV</option><option value="json">JSON</option><option value="form">FORMULAE</option></select>
+            </div>
+            <div class="col-md-3 col-xs-12">
+                Use Web Workers: <input type="checkbox" name="useworker" checked="">
+            </div>
+            <div class="col-md-3 col-xs-12">
+                Use Transferrables: <input type="checkbox" name="xferable" checked="">
+            </div>
+            <div class="col-md-3 col-xs-12">
+                Use readAsBinaryString: <input type="checkbox" name="userabs" checked="">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <div class="form-inline well well-lg">
+            <div id="drop" class="largeTextArea">Drop an XLSX / XLSM / XLSB / ODS / XLS / XML file here to see sheet data</div>
+            <hr>
+            <input type="file" class="form-control" id="xlf">
+            <button class="btn btn-default" ng-click="importExcel()">Import</button><!--ng-click="importExcel()"-->
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="ctx.includeColumnHeader" class="ng-pristine ng-untouched ng-valid"> Include Column Header
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xs-12">
+        <div class="form-inline well well-lg">
+            <textarea id="b64data" style="width: 100%;" class="largeTextArea">... or paste a base64-encoding here</textarea>
+            <button class="btn btn-default" ng-click="b64it()">Click here to process the base64 text</button>
+        </div>
+    </div>
+</div>

@@ -34,6 +34,12 @@ module.exports = function() {
     mongoose.connect('mongodb://'+ serverConfig.dbUrl, function (error, db) {
         console.log('mongo database Url: ' + serverConfig.dbUrl);
     });
+    mongoose.connection.on("open", function(){
+        console.log("mongodb is connected on " + serverConfig.dbUrl);
+    });
+    mongoose.connection.on("close", function(){
+        console.log("mongodb is closed from" + serverConfig.dbUrl);
+    });
 
     server.listen(server.get('port'), function () {
         console.log('I am listening ' + server.get('port'));

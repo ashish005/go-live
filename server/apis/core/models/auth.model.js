@@ -8,5 +8,6 @@ module.exports = function(mongoose){
         name: {type: String, required: true, default:'User Name'},
         token: {type: String, required: true, default:0}
     });
+
     return mongoose.model('auth', authSchema, 'auth');
 };

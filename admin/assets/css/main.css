@@ -1,6 +1,6 @@
 @import url("bootstrap.min.css");
 @import url("../font-awesome/css/font-awesome.css");
 @import url("animate.css");
-@import url("plugins/chosen/chosen.css");
-@import url("skins/layer-slider/skin.css");
 @import url("style.css");
+
+@import url("plugins/chosen/chosen.css");

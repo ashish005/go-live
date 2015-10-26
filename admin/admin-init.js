@@ -2,10 +2,10 @@
  * Created by wizdev on 10/22/2015.
  */
 var _basePath = {
-    common:'js/common-plugins/',
+    libs:'assets/libs/',
     modules:'js/modules/',
-    core:'js/core/',
-    admin:'js/admin/'
+    core:'admin-js/core/',
+    plugins:'admin-js/plugins/'
 };
 
 require.config({
@@ -14,19 +14,23 @@ require.config({
     // alias libraries paths
     paths: {
         'goLive': 'admin-main',
-        angular: "assets/libs/angular/angular",
-        angularAMD: 'assets/libs/angular/angularAMD.min',
-        ngRoute: 'assets/libs/angular/angular-route',
-        jQuery: 'assets/libs/jquery/jquery-2.1.1.min',
-        bootstrap:'assets/libs/bootstrap/bootstrap.min',
-        'ui-bootstrap':'assets/libs/bootstrap/ui-bootstrap-tpls-0.12.0.min',
-        'kendo.all.min': 'assets/libs/kendo/kendo.all.min',
-        'pako_deflate':'assets/libs/kendo/pako_deflate.min',
-        'jszip': 'assets/libs/kendo/jszip.min',
-        'underscore': 'assets/libs/underscore.min',
-        'jqHighlight': 'assets/libs/jquery/jquery.highlight',
+        angular: _basePath.libs+"angular/angular",
+        angularAMD:  _basePath.libs+'angular/angularAMD.min',
+        ngRoute:  _basePath.libs+'angular/angular-route',
+        jQuery:  _basePath.libs+'jquery/jquery-2.1.1.min',
+        bootstrap: _basePath.libs+'bootstrap/bootstrap.min',
+        'ui-bootstrap': _basePath.libs+'bootstrap/ui-bootstrap-tpls-0.12.0.min',
+        'underscore':  _basePath.libs+'underscore.min',
+        'jqHighlight':  _basePath.libs+'jquery/jquery.highlight',
+        'jszip': _basePath.libs+'export-options/jszip',
+        'ods': _basePath.libs+'export-options/ods',
+        'shim': _basePath.libs+'export-options/shim',
+        'xlsx': _basePath.libs+'export-options/xlsx',
+        'slimscroll':_basePath.libs+'plugins/slimscroll/jquery.slimscroll.min',
 
-        'core':'admin-js/core/core.directives'
+        'core':_basePath.core+'core.directives',
+        chosenJquery:'assets/libs/plugins/chosen/chosen.jquery',
+        excelImportExport:_basePath.plugins +'excel-import-export/enricher-excel-plugin'
     },
     // angular does not support AMD out of the box, put it in a shim
     shim: {
@@ -49,9 +53,16 @@ require.config({
         'ui-bootstrap':{
             deps: ['jQuery', 'angular']
         },
+        slimscroll:{
+            deps:['jQuery']
+        },
+        chosenJquery:{
+            deps:['jQuery']
+        },
         core:{deps: ['angular', 'ngRoute']},
+        'excal-options':['jszip', 'ods', 'shim', 'xlsx'],
         goLive:{
-            deps: ['bootstrap', 'ui-bootstrap', 'underscore', 'core']
+            deps: ['bootstrap', 'ui-bootstrap', 'underscore', 'core', 'slimscroll', 'chosenJquery']
         }
     },
     // kick start application
