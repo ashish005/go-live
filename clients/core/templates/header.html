@@ -2,9 +2,21 @@
     <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
            <a class="logo-name" style="padding-left:20px; color: #B65D5D;font-size: 40px;letter-spacing: -6px;font-weight: 800;">{{appInfo.appName}}</a>
-           <span style="top: -10px; left: 20px;position: relative;"><img alt="image" width="40px" class="img-circle" ng-src="{{appInfo.logo}}" /></span>
+           <!--<span style="top: -10px; left: 20px;position: relative;"><img alt="image" width="40px" class="img-circle" ng-src="{{appInfo.logo}}" /></span>-->
         </div>
         <ul class="nav navbar-top-links navbar-right">
+            <li>
+                <a route-ui="login">
+                    <i class="fa fa-sign-out"></i> Signin
+                </a>
+            </li>
+            <li>
+                <a route-ui="register">
+                    <i class="fa fa-sign-out"></i> Signup
+                </a>
+            </li>
+        </ul>
+        <!--<ul class="nav navbar-top-links navbar-right">
             <li class="dropdown">
                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                     <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
@@ -117,6 +129,6 @@
                     <i class="fa fa-sign-out"></i> Product
                 </a>
             </li>
-        </ul>
+        </ul>-->
     </nav>
 </div>

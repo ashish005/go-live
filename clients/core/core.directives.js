@@ -129,7 +129,6 @@
                 .when('/lockscreen', _viewOptions['lockscreen'])
                 .when('/400', _viewOptions['400'])
                 .when('/500', _viewOptions['500'])
-
         }]);
 
         /**
@@ -275,7 +274,6 @@
                             window.location.hash= '#/'+this.attributes[0].value;
                            //$location.path('/'+this.attributes[0].value);
                         })
-
                     }
                 };
             }])
@@ -298,7 +296,6 @@
                 };
                 $scope.submitRegisterForm = function() {
                     console.log("posting data....");
-                    console.log( $scope.form);
                     var _req = {method: 'POST', url: 'api/core/signup', data: $scope.form};
                     ajaxRequest(_req, function(data, status, headers, config) {
                         // this callback will be called asynchronously when the response is available.
