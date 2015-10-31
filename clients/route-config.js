@@ -17,6 +17,7 @@
                 controllerUrl: _baseModulesPath.controllerUrl +'home/controllers/home.controller'
             }
         };
+
         app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             //$locationProvider.html5Mode(true);
             $routeProvider
@@ -45,7 +46,12 @@
             var $http = initInjector.get("$http");
             $http({method: 'GET', url: 'api/core'}).then(function (resp)
             {
-                app.constant('appInfo', resp.data[0]);
+                var info = resp.data['data'];
+                info.defaultOption = [
+                    {key:'signin', name:'Signin', routeTo:'login'},
+                    {key:'signup', name:'Signup', routeTo:'register'}
+                ];
+                app.constant('appInfo', info);
                 angularAMD.bootstrap(app);
             }, function (error) {
                 throw new Error('Config file has error : ' + error);

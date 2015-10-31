@@ -1,18 +1,29 @@
 <div class="row border-bottom">
     <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
-           <a class="logo-name" style="padding-left:20px; color: #B65D5D;font-size: 40px;letter-spacing: -6px;font-weight: 800;">{{appInfo.appName}}</a>
-           <!--<span style="top: -10px; left: 20px;position: relative;"><img alt="image" width="40px" class="img-circle" ng-src="{{appInfo.logo}}" /></span>-->
+           <a class="logo-name" style="padding-left:20px; color: #B65D5D;font-size: 40px;letter-spacing: -6px;font-weight: 800;">
+               <img alt="Logo" ng-src="{{appInfo['appLogo']}}" />
+               {{appInfo['appName']}}
+           </a>
+           <span style="top: -10px; left: 20px;position: relative;" ng-if="userInfo['isAuthenticated']"><img alt="image" width="40px" class="img-circle" ng-src="{{userInfo['pic']}}" /></span>
         </div>
-        <ul class="nav navbar-top-links navbar-right">
+        <ul class="nav navbar-top-links navbar-right" ng-if="!userInfo['isAuthenticated']">
             <li>
-                <a route-ui="login">
-                    <i class="fa fa-sign-out"></i> Signin
-                </a>
+                <a route-ui="login">Signin</a>
             </li>
             <li>
-                <a route-ui="register">
-                    <i class="fa fa-sign-out"></i> Signup
+                <a route-ui="register">Signup</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-top-links navbar-right" ng-if="userInfo['isAuthenticated']">
+            <li>
+                <a id="clearInfo">Signout</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-top-links navbar-right" ng-if="userInfo['isAuthenticated']">
+            <li>
+                <a route-ui="product">
+                    <i class="fa fa-sign-out"></i> Product
                 </a>
             </li>
         </ul>

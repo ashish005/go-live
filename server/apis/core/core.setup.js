@@ -6,10 +6,61 @@ module.exports = function (server, router, mongoose) {
     var core = require('./models/core.model')(mongoose);
     var users = require('./models/users.model')(mongoose);
 
+    var reqHeaders = (function(){
+        var model = {
+            getHeader:function(headers){
+                var header = {
+                    host:headers['headers']['host'],
+                    referer : headers['headers']['referer'],
+                    ipAddress:'X-Forwarded-For'
+                };
+                return header;
+            }
+        };
+        return model;
+    })();
+
     router.get('/core', function(req, res) {
-        core.find({}, {}, function (err, _doc) {
-            if(err) throw err;
-            res.json(_doc);
+        var _model = reqHeaders.getHeader(req);
+        var _filterParams = {host : _model.host};
+        core.count(_filterParams, function (err, count){
+            var resp = {isSuccess:true, message:'', data:null};
+            if(count>0){
+                //document exists });
+                core.findOne(_model, {}, function (err, _doc) {
+                    if(err){
+                        resp.isSuccess = false;
+                        resp['message'] = err;
+                        return res.status(400).send(resp);
+                    }
+                    resp['data'] = _doc;
+                    return res.status(200).send(resp);
+                });
+            }else{
+                core.findOne().sort('-id').exec(function(err, item) {
+                    _model['id'] = (item)? item['id']+1:1;
+                    core(_model).save(function(err, _doc) {
+                        if(err) {
+                            resp.isSuccess = false;
+                            resp['message'] = err;
+                            return res.status(400).send(resp);
+                        }
+                        resp['data'] = _doc;
+                        return res.status(200).send(resp);
+                    });
+                });
+            }
+        });
+    });
+
+    router.get('/core/preferences', function(req, res) {
+        var _model = reqHeaders.getHeader(req);
+        var _filterParams = {host : _model.host};
+        mongoose.model('core').findOne(_filterParams, function (err, _doc){
+            if(err) {
+                return res.status(400).send(err);
+            }
+            return res.status(200).send({isSuccess:true, message:'', data:_doc});
         });
     });
 
@@ -44,11 +95,12 @@ module.exports = function (server, router, mongoose) {
 
     router.post('/core/signin', function(req, res) {
         var _model = req.body;
-        users.findOne({email: _model.email, password : _model.password}, function (err, _doc){
+        users.findOne({email: _model.email, password : _model.password}, {_id:0, role:1, varificationType:1, isVerified:1, email:1,mobile:1, name:1, pic:1 }, function (err, _doc){
+            var resp = {isSuccess:true, message: err, data: _doc}
             if(err) {
-                return res.status(400).send(err);
+                return res.status(400).send(resp);
             }
-            return res.status(200).send({isSuccess:true, message:''});
+            return res.status(200).send(resp);
         });
     });
 
@@ -89,5 +141,4 @@ module.exports = function (server, router, mongoose) {
             return res.status(200).send({isSuccess:true, message:'', data:_doc});
         });
     });
-
 }

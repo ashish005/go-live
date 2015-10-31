@@ -31,13 +31,16 @@
         core.factory('authenticationFactory', ["$window", function ($window) {
             var auth = {
                 isLogged: false,
-                name: '',
-                user: '',
-                roel: '',
-                isAuthenticated  : false,
+                userInfo:{
+                    name: '',
+                    email: '',
+                    mobile:'',
+                    role: '',
+                    pic:'',
+                    isAuthenticated  : false,
+                },
                 check: function () {
-                    //if ($window.sessionStorage.token && $window.sessionStorage.user) //Remove window session storage code
-                    if ($window.sessionStorage.user)
+                    if ($window.localStorage.token && $window.localStorage.email)
                     {
                         this.isLogged = true;
                     } else {
@@ -45,40 +48,58 @@
                         delete this.user;
                     }
                 },
+                getInfo: function (user) {
+                    this.setAuthInfoFromStorage();
+                    return this.userInfo;
+                },
                 setInfo: function (user) {
-                    this.name = user.name;
-                    this.user = user.email;
-                    this.role = user.role;
-                    this.token = user.token;
+                    this.userInfo['name'] = user['name'];
+                    this.userInfo['email'] = user['email'];
+                    this.userInfo['role'] = user['role'];
+                    this.userInfo['mobile'] = user['mobile'];
+                    this.userInfo['token']  = user['token'];
+                    this.userInfo['pic']  = user['pic'];
+                    this.userInfo['isAuthenticated'] = user['isVerified'];
 
-                    $window.sessionStorage.token = this.token;
-                    $window.sessionStorage.name = this.name;
-                    $window.sessionStorage.user = this.user;
-                    $window.sessionStorage.role = this.role;
+                    $window.localStorage.token = this.userInfo['token'];
+                    $window.localStorage.name = this.userInfo['name'];
+                    $window.localStorage.email = this.userInfo['email'];
+                    $window.localStorage.role = this.userInfo['role'];
+                    $window.localStorage.mobile = this.userInfo['mobile'];
+                    $window.localStorage.pic = this.userInfo['pic'];
+                    $window.localStorage.isAuthenticated = this.userInfo['isAuthenticated'];
                 },
                 setAuthInfoFromStorage: function () {
-                    this.name = $window.sessionStorage.name ;
-                    this.user = $window.sessionStorage.user;
-                    this.role = $window.sessionStorage.role;
-                    this.token = $window.sessionStorage.token;
+                    this.userInfo['name'] =  $window.localStorage.name;
+                    this.userInfo['email'] = $window.localStorage.email;
+                    this.userInfo['role'] = $window.localStorage.role;
+                    this.userInfo['mobile'] = $window.localStorage.mobile;
+                    this.userInfo['token']  = $window.localStorage.token;
+                    this.userInfo['pic'] = $window.localStorage.pic;
+                    this.userInfo['isAuthenticated'] = $window.localStorage.isAuthenticated;
                 },
                 clearInfo: function () {
                     this.isLogged = false;
-                    this.isAuthenticated = false,
 
-                    delete this.name;
-                    delete this.user;
-                    delete this.role;
-                    delete this.token;
+                    delete this.userInfo['name'];
+                    delete this.userInfo['email'];
+                    delete this.userInfo['role'];
+                    delete this.userInfo['mobile'];
+                    delete this.userInfo['token'];
+                    delete this.userInfo['pic'];
+                    delete this.userInfo['isAuthenticated'];
 
-                    //Remove window session storage code
-                    delete $window.sessionStorage.token;
-                    delete $window.sessionStorage.name;
-                    delete $window.sessionStorage.user;
-                    delete $window.sessionStorage.role;
+                        //Remove window session storage code
+                    delete $window.localStorage.token;
+                    delete $window.localStorage.name;
+                    delete $window.localStorage.email;
+                    delete $window.localStorage.role;
+                    delete $window.localStorage.mobile;
+                    delete $window.localStorage.pic;
+                    delete $window.localStorage.isAuthenticated;
                 },
                 getAuthToken: function () {
-                    return 'Bearer ' + $window.sessionStorage.token;
+                    return 'Bearer ' + $window.localStorage.token;
                 }
             }
             return auth;
@@ -87,7 +108,7 @@
             return {
                 request: function (config) {
                     config.headers = config.headers || {};
-                    config.headers.Authorization = authenticationFactory.getAuthToken();
+                    config.headers.Authorization = 'Bearer'+ authenticationFactory.getAuthToken();
                     return config;
                 },
                 requestError: function (rejection) {
@@ -103,7 +124,7 @@
                 /* Revoke client authentication if 401 is received */
                 responseError: function (rejection) {
                     if (rejection != null && rejection.status === 401 && (authenticationFactory.getAuthToken() || authenticationFactory.isAuthenticated)) {
-                        //delete $window.sessionStorage.token;//Remove window session storage code
+                        //delete $window.localStorage.token;//Remove window session storage code
                         authenticationFactory.clearInfo();
                         authenticationFactory.isAuthenticated = false;
                         $location.path("/login");
@@ -112,7 +133,7 @@
                 }
             };
         }]);
-        core.config(function ($httpProvider) {
+        core.config(['$httpProvider', function ($httpProvider) {
             //$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
             $httpProvider.defaults.useXDomain = true;
             delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -120,7 +141,7 @@
             $httpProvider.interceptors.push('tokenInterceptor');
             $httpProvider.defaults.cache = false;
             $httpProvider.defaults.timeout = 600000;
-        });
+        }]);
         core.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             $routeProvider
                 .when('/login', _viewOptions['login'])
@@ -236,10 +257,18 @@
             };
         }
 
-        function goLiveHeader(){
+        function goLiveHeader(authenticationFactory, $location){
             return {
                 restrict: 'AE',
-                templateUrl:_viewOptions.headerTemplateUrl
+                templateUrl:_viewOptions.headerTemplateUrl,
+                link: function(scope, element, attr){
+                    element.on('click', '#clearInfo', function(e){
+                        e.stopPropagation();
+                        authenticationFactory.clearInfo();
+                        scope.userInfo = null;
+                        window.location.hash= 'login';
+                    })
+                }
             };
         }
 
@@ -264,20 +293,19 @@
                     }
                 };
             }])
-            .directive('goLiveHeader', goLiveHeader)
+            .directive('goLiveHeader', ['authenticationFactory', '$location', goLiveHeader])
             .directive('routeUi',['$location', function($location){
                 return {
                     restrict: 'A',
                     link:function(scope, element, attr){
                         element.on('click', function(e){
                             e.stopPropagation();
-                            window.location.hash= '#/'+this.attributes[0].value;
-                           //$location.path('/'+this.attributes[0].value);
+                            window.location.hash= '/'+eval(attr)['routeUi'];
                         })
                     }
                 };
             }])
-            .controller('authController', ['$scope', '$rootScope', '$http', '$location', function ($scope, $rootScope, $http, $location) {
+            .controller('authController', ['$scope', '$rootScope', '$http', '$location', 'authenticationFactory', function ($scope, $rootScope, $http, $location, authenticationFactory) {
                 $scope.initLoginForm = function() {
                     $scope.form = {
                         email: 'me.ashish005@gmail.com',
@@ -307,7 +335,9 @@
                 $scope.submitLoginForm = function() {
                     var _req = {method: 'POST', url: 'api/core/signin', data: $scope.form};
                     ajaxRequest(_req, function(data, status, headers, config) {
-                        $location.path('/product');// this callback will be called asynchronously when the response is available.
+                        authenticationFactory.setInfo(data['data']);
+                        window.location.href = "shop-all";
+                        //$location.path('/shop-all');// this callback will be called asynchronously when the response is available.
                     }, function(data, status, headers, config) {
                         console.log('error: ', data );// this callback will be called asynchronously when the response is available.
                     });
@@ -318,6 +348,6 @@
                 }
 
             }
-        ])
+        ]);
     });
 })(window.define, window.angular);

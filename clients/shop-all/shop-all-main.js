@@ -24,11 +24,12 @@
         app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             $routeProvider
                 .when('/product', angularAMD.route(_shopAllRouteConfig.product))
-                .otherwise({redirectTo: '/login'});//Handle all exceptions
+                .otherwise({redirectTo: '/product'});//Handle all exceptions
         }]);
 
-        app.run(['$rootScope', 'authenticationFactory','appInfo', function ($rootScope, authenticationFactory, appInfo) {
+        app.run(['$rootScope', 'authenticationFactory','appInfo', 'userInfo', function ($rootScope, authenticationFactory, appInfo, userInfo) {
             $rootScope.appInfo = appInfo;
+            $rootScope.userInfo = userInfo;
             $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {
 
             });
@@ -83,15 +84,26 @@
 
         angular.element(document).ready(function () {
             var initInjector = angular.injector(["ng"]);
-            var $http = initInjector.get("$http");
-            $http({method: 'GET', url: 'api/core'}).then(function (resp)
-            {
-                app.constant('appInfo', resp.data[0]);
-                $('<div landing-scrollspy><div go-live-header></div><div ng-view></div></div>').appendTo('body');
-                return angular.bootstrap($('body'), [_appName]);
-            }, function (error) {
-                throw new Error('Config file has error : ' + error);
-            });
+            var authFac = angular.injector(['goLive.core']).get('authenticationFactory');
+            authFac.check();
+
+            if(authFac['isLogged']){
+                var $http = initInjector.get("$http");
+                $http({method: 'GET', url: 'api/core/preferences'}).then(function (resp)
+                {
+                    app.constant('userInfo',authFac.getInfo());
+                    var info = resp.data['data'];
+                    info.defaultOption = [
+                        {key:'signout', name:'Signout', routeTo:'login'}
+                    ];
+                    app.constant('appInfo', info);
+                    $('<div landing-scrollspy><div go-live-header></div><div ng-view></div></div>').appendTo('body');
+                    return angular.bootstrap($('body'), [_appName]);
+                }, function (error) {
+                    window.location.hash='/login';
+                    throw new Error('Config file has error : ' + error);
+                });
+            }
         });
         return app;
     });
