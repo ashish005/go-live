@@ -8,20 +8,70 @@
                     <h5>Get All DB Information Here</h5>
                     <div ibox-tools></div>
                 </div>
-                <div class="ibox-content">
-                    <div class="input-group">
-                        <select id="collectionInfo" ng-change="selectAction()" class="chosen-select" style="width:350px;" tabindex="4" ng-model="form['actveOpt']" ng-options="s.name for s in form.collection">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <select id="collectionInfo" ng-change="selectAction()" class="chosen-select" style="width:350px;height: 30px;" tabindex="4" ng-model="form['actveOpt']" ng-options="s.name for s in form.collection">
                         </select>
                     </div>
-                    <div class="full-height-scroll" full-scroll>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <tbody>
-                                    <tr data-ng-repeat="collctonInfo in collectionData track by $index">
-                                        <td data-ng-repeat="cols in collctonInfo">{{cols}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="col-lg-4">
+                        <div class="pull-right tooltip-demo">
+                            <a class="btn btn-primary btn-xs">Add new</a>
+                            <a class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print"></i> </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <span class="simple_tag"> Grid </span>
+                        <span class="simple_tag"> Tree </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox ">
+                            <div class="ibox-content" style="height: 600px;">
+                                <div class="full-height-scroll" full-scroll>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <tbody>
+                                            <tr data-ng-repeat="collctonInfo in collectionData track by $index">
+                                                <td class="footable-visible footable-first-column">
+                                                    <div actions data="collctonInfo" perform-call-back="ActionCallBack"></div>
+                                                </td>
+                                                <td data-ng-repeat="(key, cols) in collctonInfo">
+                                                    <img style="width: 40px; height: 26px;" alt="Logo" ng-if="'appLogo' == key ||'pic' == key" ng-src="{{cols}}"/> <span ng-if="'appLogo' != key && 'pic' != key">{{cols}}</span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <script type="text/ng-template" id="nodes_renderer.html">
+                                    <div ui-tree-handle class="tree-node tree-node-content">
+                                        <a class="pull-right btn btn-white btn-xs" data-nodrag ng-click="delete(this)"><span class="fa fa-trash"></span></a>
+                                        <a class="pull-right btn btn-white btn-xs" data-nodrag ng-click="newSubItem(this)"><span class="fa fa-plus"></span></a>
+                                        <a class="pull-right btn btn-white btn-xs" data-nodrag ng-click="edit(this)"><span class="fa fa-pencil"></span></a>
+                                        <a class="btn btn-primary btn-xs" data-nodrag ng-click="toggle(this)"><span class="fa" ng-class="{'fa-angle-down': collapsed, 'fa-angle-right': !collapsed}"></span></a>
+                                       <label ng-if="!node['isNew']">{{node['name']}}</label>
+                                        <div class="input-group" ng-if="node['isNew']">
+                                            <input class="input-sm form-control" type="text" ng-model="node.name">
+                                            <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary" data-nodrag ng-click="save(this)"> change!</button> </span>
+                                        </div>
+                                    </div>
+                                    <ol ui-tree-nodes="" ng-model="node.child" ng-class="{hidden: collapsed}">
+                                        <li ng-repeat="node in node.child" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+                                    </ol>
+                                </script>
+                                <div ui-tree id="tree-root">
+                                    <ol ui-tree-nodes ng-model="data">
+                                        <li ng-repeat="node in data" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+                                    </ol>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -25,7 +25,8 @@
                 templateUrl: './core/templates/error/internal-server-error.html'
             },
             headerTemplateUrl: './core/templates/header.html',
-            iboxToolsTemplateUrl: './core/templates/common/ibox_tools.html'
+            iboxToolsTemplateUrl: './core/templates/common/ibox_tools.html',
+            menuTree:'./core/templates/mega-menu.html',
         };
 
         core.factory('authenticationFactory', ["$window", function ($window) {
@@ -272,6 +273,17 @@
             };
         }
 
+        function treeMenu($location){
+            return {
+                restrict: 'AE',
+                scope:{items:'='},
+                template:'<div class="show-grid" ng-repeat="itemChilds in items track by $index">\
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><div class="col-xs-2"><h1><span class="visible-lg-inline">{{itemChilds["name"]}}</span></h1></div><div class="col-xs-10"><div tree-menu items="itemChilds["child"]"></div></div></div>\
+                </div>',
+                link: function(scope, element, attr){}
+            };
+        }
+
         /**
          *
          * Pass all functions into module
@@ -294,6 +306,7 @@
                 };
             }])
             .directive('goLiveHeader', ['authenticationFactory', '$location', goLiveHeader])
+            .directive('treeMenu', ['$location', treeMenu])
             .directive('routeUi',['$location', function($location){
                 return {
                     restrict: 'A',

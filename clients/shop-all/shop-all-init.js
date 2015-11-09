@@ -32,7 +32,8 @@
             'xlsx': _basePath.libs+'export-options/xlsx',
             'slimscroll':_basePath.libs+'plugins/slimscroll/jquery.slimscroll.min',
 
-            'core':_basePath.core+'core.directives'
+            'core':_basePath.core+'core.directives',
+            'popup-service':'../common/services/popup.service'
         },
         // angular does not support AMD out of the box, put it in a shim
         shim: {

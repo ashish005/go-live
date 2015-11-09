@@ -8,5 +8,5 @@ module.exports = function(db){
         parentId : {type: Number, required: true},
     });
 
-    return db.model('productCategory', productCategorySchema, 'productCategory');
+    return db.model('category', productCategorySchema, 'category');
 };

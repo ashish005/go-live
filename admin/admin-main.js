@@ -10,7 +10,7 @@
         window.appName  = "goLive";
         var _appName = window.appName;
 
-        var app = angular.module(_appName, ['ui.bootstrap', 'ngRoute', 'goLive.core']);
+        var app = angular.module(_appName, ['ui.bootstrap', 'ngRoute', 'goLive.core', 'ui.tree']);
         var _baseModulesPath = {
             templateUrl:'admin-js/modules/',
             controllerUrl:'admin-js/modules/'
@@ -32,7 +32,14 @@
                 },
             }
         };
-
+        app.constant('popupView', {
+            dashboard:{
+                view:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-view.html' },
+                delete:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-delete.html' },
+                edit:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-edit.html' },
+                tree:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-tree.html' }
+            }
+        });
 
         app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             $routeProvider
@@ -43,18 +50,10 @@
 
         app.run(['$rootScope', 'authenticationFactory','appInfo', function ($rootScope, authenticationFactory, appInfo) {
             $rootScope.appInfo = appInfo;
-            $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {
-
-            });
-            $rootScope.$on('$routeChangeSuccess', function (event, nextRoute, currentRoute) {
-                /*console.log('$routeChangeSuccess');*/
-            });
-            $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {
-
-            });
-            $rootScope.$on('$viewContentLoaded', function () {
-
-            });
+            $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {});
+            $rootScope.$on('$routeChangeSuccess', function (event, nextRoute, currentRoute) {});
+            $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {});
+            $rootScope.$on('$viewContentLoaded', function () {});
         }]);
 
         app.config(function( $controllerProvider, $provide, $compileProvider ) {

@@ -1,7 +1,7 @@
 /**
  * Created by Ashish on 10/12/2015.
  */
-var base = '/clients';//clients
+var base = '/admin';//clients
 var app = require('./server/server-main')(); //Run Server
 
 app.server.use('/', app.express.static(__dirname + base));

@@ -243,6 +243,35 @@
             };
         }
 
+        function goLiveActions(){
+            return {
+                restrict: 'AE',
+                scope:{
+                    data:'=?',
+                    performCallBack:'&?'
+                },
+                template:'<div class="btn-group" style="height: 20px;"><button class="btn-white btn btn-xs view">View</button><button class="btn-white edit"><i class="fa fa-pencil"></i></button><button class="btn-white delete"><i class="fa fa-trash"></i> </button></div>',//<button class="btn-white tree">Tree</button>
+                controller: function($scope, $element){
+                    $element.on('click', '.btn-white.btn.btn-xs.view', function(e){
+                        e.stopPropagation();
+                        $scope.performCallBack()('view', $scope.data);
+                    });
+                    $element.on('click', '.btn-white.edit', function(e){
+                        e.stopPropagation();
+                        $scope.performCallBack()('edit', $scope.data);
+                    });
+                    $element.on('click', '.btn-white.delete', function(e){
+                        e.stopPropagation();
+                        $scope.performCallBack()('delete', $scope.data);
+                    });
+                    /*$element.on('click', '.btn-white.tree', function(e){
+                        e.stopPropagation();
+                        $scope.performCallBack()('tree', $scope.treeData);
+                    });*/
+                }
+            };
+        }
+
         /**
          *
          * Pass all functions into module
@@ -265,8 +294,8 @@
                 };
             }])
             .directive('goLiveHeader', goLiveHeader)
-            .controller('authController', ['$scope', '$rootScope', '$http', '$location',
-            function ($scope, $rootScope, $http, $location) {
+            .directive('actions', goLiveActions)
+            .controller('authController', ['$scope', '$rootScope', '$http', '$location', function ($scope, $rootScope, $http, $location) {
                 $scope.initLoginForm = function() {
                     $scope.form = {
                         email: 'me.ashish005@gmail.com',
@@ -307,7 +336,61 @@
                     $http(request).success(successCallback).error(errorCallback);
                 }
 
-            }
-        ])
+            }])
+            .factory("popupService", ['$q', "modalService", '$timeout', function ($q, modalService, $timeout) {
+            var modalDefaults = { backdrop: true, keyboard: true, modalFade: true, templateUrl: '', windowClass: 'default-popup' };
+            var _model = {};
+            _model.showPopup = function (template, model) {
+                modalDefaults.windowClass = 'default-popup';
+                modalDefaults.templateUrl = template;
+                return modalService.showModal(modalDefaults, model);
+            };
+            return _model;
+        }])
+            .service("modalService", ["$modal", function ($modal) {
+            var modalDefaults = {
+                backdrop: true,
+                keyboard: true,
+                modalFade: true,
+                templateUrl: '',
+                windowClass: ''
+            };
+            var modalOptions = {
+                closeButtonText: 'Close',
+                actionButtonText: 'OK',
+                headerText: 'Proceed?',
+                bodyText: 'Perform this action?'
+            };
+            this.showModal = function (customModalDefaults, customModalOptions) {
+                if (!customModalDefaults) customModalDefaults = {};
+                customModalDefaults.backdrop = 'static';
+                return this.show(customModalDefaults, customModalOptions);
+            };
+
+            this.show = function (customModalDefaults, customModalOptions) {
+                //Create temp objects to work with since we're in a singleton service
+                var tempModalDefaults = {};
+                var tempModalOptions = {};
+
+                //Map angular-ui modal custom defaults to modal defaults defined in service
+                angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
+
+                //Map modal.html $scope custom properties to defaults defined in service
+                angular.extend(tempModalOptions, modalOptions, customModalOptions);
+
+                if (!tempModalDefaults.controller) {
+                    tempModalDefaults.controller = function ($scope, $modalInstance) {
+                        $scope.modalOptions = tempModalOptions;
+                        $scope.modalOptions.ok = function (result) {
+                            $modalInstance.close(result);
+                        };
+                        $scope.modalOptions.close = function (result) {
+                            $modalInstance.dismiss('cancel');
+                        };
+                    }
+                }
+                return $modal.open(tempModalDefaults).result;
+            };
+        }]);
     });
 })(window.define, window.angular);

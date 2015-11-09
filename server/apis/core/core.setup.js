@@ -2,9 +2,8 @@
  * Created by wizdev on 10/23/2015.
  */
 module.exports = function (server, router, mongoose) {
-    var auth = require('./models/auth.model')(mongoose);
-    var core = require('./models/core.model')(mongoose);
-    var users = require('./models/users.model')(mongoose);
+    var core = mongoose.model('core');
+    var users = mongoose.model('users');
 
     var reqHeaders = (function(){
         var model = {
@@ -134,11 +133,42 @@ module.exports = function (server, router, mongoose) {
 
     router.get('/core/collection/data', function(req, res) {
        var collection = req.query;
-        mongoose.model(collection['name']).find({}, function (err, _doc){
+        mongoose.model(collection['name']).find({},{_id:0}, function (err, _doc){
             if(err) {
-                return res.status(400).send(err);
+                return res.status(400).send({isSuccess:false, message:err, data:_doc});
             }
-            return res.status(200).send({isSuccess:true, message:'', data:_doc});
+            return res.status(200).send({isSuccess:true, message:err, data:_doc});
+        });
+    });
+
+
+    router.post('/core/collection/item', function(req, res) {
+        var collection = req.query;
+        mongoose.model(collection['name']).findOne().sort('-id').exec(function(err, item) {
+            mongoose.model(collection['name'])(req.body).save(function callback(err, doc) {
+                if(err) {
+                    return res.status(400).send({isSuccess:false});
+                }
+                return res.status(200).send({isSuccess:true});
+            });
+        });
+    });
+
+    router.put('/core/collection/item', function(req, res) {
+        mongoose.model(collection['name']).update({id:req.body['id']}, req.body, { upsert:true }, function callback(err, doc) {
+            if(err) {
+                return res.status(400).send({isSuccess:false});
+            }
+            return res.status(200).send({isSuccess:true});
+        });
+    });
+
+    router.delete('/core/collection/item', function(req, res) {
+        mongoose.model(collection['name']).remove({id:{$in: req.query.ids}}, function(err, _doc){
+            if(err) {
+                return res.status(400).send({isSuccess:false});
+            }
+            return res.status(200).send({isSuccess:true});
         });
     });
 }

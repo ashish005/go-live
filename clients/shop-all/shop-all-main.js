@@ -21,9 +21,17 @@
             }
         };
 
+        var popupViewOptions = {
+            product:{
+                show: _baseModulesPath.templateUrl +'product/templates/pop-ups/show-product.html'
+            }
+        };
+        app.constant('popupViewOptions', popupViewOptions);
+
         app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
             $routeProvider
                 .when('/product', angularAMD.route(_shopAllRouteConfig.product))
+                .when('/product/:id', angularAMD.route(_shopAllRouteConfig.product))
                 .otherwise({redirectTo: '/product'});//Handle all exceptions
         }]);
 

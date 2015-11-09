@@ -3,7 +3,7 @@
  */
 var _basePath = {
     libs:'assets/libs/',
-    modules:'js/modules/',
+    modules:'admin-js/modules/',
     core:'admin-js/core/',
     plugins:'admin-js/plugins/'
 };
@@ -27,9 +27,13 @@ require.config({
         'shim': _basePath.libs+'export-options/shim',
         'xlsx': _basePath.libs+'export-options/xlsx',
         'slimscroll':_basePath.libs+'plugins/slimscroll/jquery.slimscroll.min',
+        'ui-tree':_basePath.libs+'plugins/uiTree/angular-ui-tree.min',
+
+        'popup-service':'../common/services/popup.service',
 
         'core':_basePath.core+'core.directives',
         chosenJquery:'assets/libs/plugins/chosen/chosen.jquery',
+        'dashboard-service':_basePath.modules +'dashboard/services/dashboard.service',
         excelImportExport:_basePath.plugins +'excel-import-export/enricher-excel-plugin'
     },
     // angular does not support AMD out of the box, put it in a shim
@@ -56,13 +60,13 @@ require.config({
         slimscroll:{
             deps:['jQuery']
         },
-        chosenJquery:{
-            deps:['jQuery']
+        'ui-tree':{
+            deps:['angular']
         },
         core:{deps: ['angular', 'ngRoute']},
         'excal-options':['jszip', 'ods', 'shim', 'xlsx'],
         goLive:{
-            deps: ['bootstrap', 'ui-bootstrap', 'underscore', 'core', 'slimscroll', 'chosenJquery']
+            deps: ['bootstrap', 'ui-bootstrap', 'underscore', 'core', 'slimscroll', 'ui-tree']
         }
     },
     // kick start application
