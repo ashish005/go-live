@@ -1,8 +1,0 @@
-use goLive
-db.core.update({}, {$set: {"createdBy": 'goLive', "createdDate": '22-10-2015'}}, { multi: true} )
-
-//Create Indexes
-db.core.createIndex( { id: 1 }, { unique: true } );
-
-//Remove some item on the basis of key
-//db.core.remove({'key': {$ne: "some value"}})

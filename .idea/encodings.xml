@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/clients/common/services/popup.service.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/ACE/ace/slr/server.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/admin/directives/taxonomy.directive.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/ahi-base.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/app-init-config.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/common-plugins/directives/history-side-bar/feedback-comments.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/common-plugins/directives/history-side-bar/feedback-side-bar.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/common-plugins/directives/history-side-bar/history-side-bar.directive.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/common-plugins/services/ajax.factory.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/common-plugins/utility/utility.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/config.json" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/core/auth/models/auth.factory.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/core/core.directives.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/core/feedback/models/feedback.model.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/core/feedback/services/feedback.service.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/core/feedback/templates/feedback.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/core/templates/ahi-header.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/core/templates/default.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/modules/asset-details/controllers/asset-details.controller.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/modules/asset-details/models/asset-details.model.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/modules/asset-details/services/asset-details.service.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/ahi/modules/asset-details/templates/popups/asset-class-info-popup.html" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/app/modules/ahi/ahi-base.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/amps/amps/AssertITApp/app/modules/ahi/app-init-config.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/authServer/authserver/ahi/modules/ahi-admin/ahi-admin.service.js" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../../project/authServer/authserver/ahi/routers/server.routers.js" charset="UTF-8" />
+  </component>
+</project>

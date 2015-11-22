@@ -1,0 +1,19 @@
+doctype html
+html
+    head
+        title APIs
+        //link(rel='stylesheet', href='/server/assets/css/apis.css')
+    body
+        table
+            thead
+                tr
+                    th Methods
+                    th Path
+                    th Params
+            tbody
+                each item, key in data
+                    tr
+                        each i, j in item.route.methods
+                            td= j
+                        td= item.route.path
+                        td= item.route.params

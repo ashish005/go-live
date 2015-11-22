@@ -1,0 +1,20 @@
+<nav class="navbar navbar-grey-light" id="main_navbar" role="navigation">
+    <ul class="nav navbar-nav navbar-left">
+        <li class="dropdown-full" style="position: static;" ng-repeat="items in productMenu track by $index">
+            <a data-toggle="dropdown" href="javascript:void(0);" class="dropdown-toggle" style="padding: 4px 6px;"><!--<i class="fa fa-th"></i>-->{{items['name']}}<span class="caret"></span></a>
+            <div class="dropdown-menu no-shadow no-border-radius bordered">
+                <!--<div tree-menu items="items['child']"></div>-->
+                <ul class="row col-lg-12" style="list-style-type: none">
+                    <li class="col-xs-3" ng-repeat="itemChilds in items['child'] track by $index">
+                        <h2>{{itemChilds['name']}}</h2>
+                        <ul style="padding-left: 0px;" class="small-list">
+                            <li class="col-lg-6" style="padding: 1px;" ng-repeat="itemSubChilds in itemChilds['child'] track by $index">
+                                <a route-ui="product/{{itemSubChilds['id']}}"> {{itemSubChilds['name']}} </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</nav>

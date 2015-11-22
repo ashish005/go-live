@@ -1,4 +1,0 @@
-use goLive
-db.core.drop()
-db.category.drop()
-db.users.drop()
