@@ -16,7 +16,7 @@
         server.use(bodyParser.json());
         server.use(cors());
 
-        var port = process.env.PORT || 4001;        // set our port
+        var port = process.env.PORT || 4000;        // set our port
         server.set('port', port);
         server.set('views', __dirname + '/views');
         server.set('view engine', 'jade');

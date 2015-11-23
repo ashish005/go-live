@@ -3,10 +3,14 @@
  */
 
 var app = require('./server/server')(); //Run Server
-
-var base = '/client';
-
-app.server.use('/', app.express.static(__dirname + base));
+app.server.use('/', app.express.static(__dirname + '/client'));
 app.server.get('/', function (req, res) {
-    res.sendFile(__dirname  + base+'/index.html');
+    res.sendFile('client/index.html' , { root : __dirname});
+});
+
+var admin = require('./server/admin')(); //Run Server
+admin.server.use('/', admin.express.static(__dirname + '/admin'));
+admin.server.get('/', function (req, res) {
+    console.log(__dirname);
+    res.sendFile('admin/index.html' , { root : __dirname});
 });

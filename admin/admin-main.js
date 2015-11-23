@@ -32,29 +32,31 @@
                 },
             }
         };
-        app.constant('popupView', {
+
+
+        var popupView = {
             dashboard:{
                 view:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-view.html' },
                 delete:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-delete.html' },
                 edit:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-edit.html' },
                 tree:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-tree.html' }
             }
-        });
+        };
 
-        app.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+        function routeConfig($routeProvider, $locationProvider) {
             $routeProvider
                 .when('/dashboard', angularAMD.route(_adminRouteConfig.dashboard))
                 .when('/users', angularAMD.route(_adminRouteConfig.users))
                 .otherwise({redirectTo: '/login'});//Handle all exceptions
-        }]);
+        };
 
-        app.run(['$rootScope', 'authenticationFactory','appInfo', function ($rootScope, authenticationFactory, appInfo) {
-            $rootScope.appInfo = appInfo;
+        function run($rootScope, authenticationFactory) {
+            /*$rootScope.appInfo = appInfo;*/
             $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {});
             $rootScope.$on('$routeChangeSuccess', function (event, nextRoute, currentRoute) {});
             $rootScope.$on('$routeChangeError', function (event, current, previous, rejection) {});
             $rootScope.$on('$viewContentLoaded', function () {});
-        }]);
+        };
 
         app.config(function( $controllerProvider, $provide, $compileProvider ) {
             // Let's keep the older references.
@@ -94,17 +96,24 @@
             };
         });
 
+        app
+            .constant('popupView', popupView)
+            .config(['$routeProvider', '$locationProvider', routeConfig])
+            .run(['$rootScope', 'authenticationFactory', run])
+
         angular.element(document).ready(function () {
             var initInjector = angular.injector(["ng"]);
             var $http = initInjector.get("$http");
-            $http({method: 'GET', url: 'api/core'}).then(function (resp)
+            /*$http({method: 'GET', url: 'api/core'}).then(function (resp)
             {
                 app.constant('appInfo', resp.data[0]);
                 $('<div landing-scrollspy><div go-live-header></div><div ng-view></div></div>').appendTo('body');
                 return angular.bootstrap($('body'), [_appName]);
             }, function (error) {
                 throw new Error('Config file has error : ' + error);
-            });
+            });*/
+            $('<div landing-scrollspy><div go-live-header></div><div ng-view></div></div>').appendTo('body');
+            return angular.bootstrap($('body'), [_appName]);
         });
         return app;
     });
