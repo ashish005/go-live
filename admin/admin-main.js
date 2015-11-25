@@ -30,6 +30,13 @@
                 access: {
                     requiredLogin: true
                 },
+            },
+            productDashboard:{
+                templateUrl: _baseModulesPath.templateUrl +'product-dashboard/templates/product-dashboard.html',
+                controllerUrl: _baseModulesPath.controllerUrl +'product-dashboard/controllers/product-dashboard.controller',
+                access: {
+                    requiredLogin: true
+                },
             }
         };
 
@@ -40,12 +47,16 @@
                 delete:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-delete.html' },
                 edit:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-edit.html' },
                 tree:{ templateUrl:_baseModulesPath['templateUrl'] + 'dashboard/templates/popups/popup-tree.html' }
+            },
+            'product-dashboard':{
+                tree:{ templateUrl:_baseModulesPath['templateUrl'] + 'product-dashboard/templates/popups/popup-tree.html' }
             }
         };
 
         function routeConfig($routeProvider, $locationProvider) {
             $routeProvider
                 .when('/dashboard', angularAMD.route(_adminRouteConfig.dashboard))
+                .when('/product-dashboard', angularAMD.route(_adminRouteConfig.productDashboard))
                 .when('/users', angularAMD.route(_adminRouteConfig.users))
                 .otherwise({redirectTo: '/login'});//Handle all exceptions
         };
@@ -112,6 +123,7 @@
             }, function (error) {
                 throw new Error('Config file has error : ' + error);
             });*/
+            app.constant('config', {baseSvcUrl:'http://localhost:4000/api/'});
             $('<div landing-scrollspy><div go-live-header></div><div ng-view></div></div>').appendTo('body');
             return angular.bootstrap($('body'), [_appName]);
         });

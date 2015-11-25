@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" data-ng-click="modalOptions.close()"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Tree : <strong> {{modalOptions.model['name']}} </strong> </h4>
+</div>
+<div class="modal-body" ng-init="model = modalOptions.model; operation = modalOptions['operation']">
+    <form class="form-horizontal">
+        <div class="row">
+            <div class="ibox float-e-margins" style="margin-top: -20px;">
+                <div class="ibox-title">
+                    <div class="input-group ng-scope">
+                        <input class="input-sm form-control ng-pristine ng-valid ng-touched" type="text">
+                        <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary" data-nodrag="" ng-click="operation.save(this)"> Search!</button> </span>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <script type="text/ng-template" id="nodes_renderer.html">
+                        <div ui-tree-handle class="tree-node tree-node-content">
+                            <a class="pull-right btn btn-white btn-xs" data-nodrag ng-click="operation.delete(this)"><span class="fa fa-trash"></span></a>
+                            <a class="pull-right btn btn-white btn-xs" data-nodrag ng-click="operation.newSubItem(this)"><span class="fa fa-plus"></span></a>
+                            <a class="pull-right btn btn-white btn-xs" data-nodrag ng-click="operation.edit(this)"><span class="fa fa-pencil"></span></a>
+                            <a class="btn btn-primary btn-xs" data-nodrag ng-click="operation.toggle(this)"><span class="fa" ng-class="{'fa-angle-down': collapsed, 'fa-angle-right': !collapsed}"></span></a>
+                            <label ng-if="!node['isNew']">{{node['name']}}</label>
+                            <div class="input-group" ng-if="node['isNew']">
+                                <input class="input-sm form-control" type="text" ng-model="node.name">
+                                <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary" data-nodrag ng-click="operation.save(this)"> change!</button> </span>
+                            </div>
+                        </div>
+                        <ol ui-tree-nodes="" ng-model="node.child" ng-class="{hidden: collapsed}">
+                            <li ng-repeat="node in node.child" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+                        </ol>
+                    </script>
+                    <div ui-tree id="tree-root">
+                        <ol ui-tree-nodes ng-model="model['child']">
+                            <li ng-repeat="node in model['child']" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-green" data-dismiss="modal" data-ng-click="modalOptions.ok(this)">Save</button>
+    <button type="button" class="btn btn-white" data-dismiss="modal" data-ng-click="modalOptions.close()">Close</button>
+</div>

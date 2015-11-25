@@ -34,7 +34,9 @@ require.config({
         'core':_basePath.core+'core.directives',
         chosenJquery:'assets/libs/plugins/chosen/chosen.jquery',
         'dashboard-service':_basePath.modules +'dashboard/services/dashboard.service',
-        excelImportExport:_basePath.plugins +'excel-import-export/enricher-excel-plugin'
+        excelImportExport:_basePath.plugins +'excel-import-export/enricher-excel-plugin',
+
+        'product-dashboard-service':_basePath.modules +'product-dashboard/services/product-dashboard.service',
     },
     // angular does not support AMD out of the box, put it in a shim
     shim: {
