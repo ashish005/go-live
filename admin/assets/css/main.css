@@ -4,3 +4,5 @@
 @import url("style.css");
 
 @import url("plugins/uiTree/angular-ui-tree.min.css");
+@import url("plugins/summernote/summernote.css");
+@import url("plugins/summernote/summernote-bs3.css");

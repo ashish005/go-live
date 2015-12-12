@@ -1,7 +1,8 @@
 /**
  * Created by wizdev on 11/24/2015.
  */
-module.exports = function() {
+(function (module, require) {
+    module.exports = function() {
     var express = require('express'),
         bodyParser = require('body-parser'),
         cors = require('cors'),
@@ -23,7 +24,8 @@ module.exports = function() {
 // Add live reload
 //server.use(livereload({port: livereloadport}));
 //============================================================================
-    var mongoose = require('./database-connection')();
+    var mongoose = require('./database-connection')(server, express);
+    var adminRouters = require('./core/core.routers')(server, mongoose);//Define All routes here
 
     server.listen(server.get('port'), function () {
         console.log('I am listening ' + server.get('port'));
@@ -33,3 +35,4 @@ module.exports = function() {
         express:express
     }
 }
+})(module, require);

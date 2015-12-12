@@ -24,12 +24,11 @@
 // Add live reload
 //server.use(livereload({port: livereloadport}));
 //============================================================================
-        var mongoose = require('./database-connection')();
+        var mongoose = require('./database-connection')(server, express);
         var shopAllRouters = require('./shop-all/shop-all.routes')(server, express, mongoose);//Define All routes here
 
-
         shopAllRouters.get('/apis', function(req, res) {
-            res.render('apis', {data:shopAllRouters.stack});
+            res.render('apis', { data:shopAllRouters.stack });
         });
 
         server.listen(server.get('port'), function () {

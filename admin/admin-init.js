@@ -28,6 +28,9 @@ require.config({
         'xlsx': _basePath.libs+'export-options/xlsx',
         'slimscroll':_basePath.libs+'plugins/slimscroll/jquery.slimscroll.min',
         'ui-tree':_basePath.libs+'plugins/uiTree/angular-ui-tree.min',
+        'codemirror': _basePath.libs+'plugins/ui-codemirror/ui-codemirror.min',
+        'summernote': _basePath.libs+'plugins/summernote/summernote.min',
+        'angular-summernote': _basePath.libs+'plugins/summernote/angular-summernote.min',
 
         'popup-service':'../common/services/popup.service',
 
@@ -37,6 +40,7 @@ require.config({
         excelImportExport:_basePath.plugins +'excel-import-export/enricher-excel-plugin',
 
         'product-dashboard-service':_basePath.modules +'product-dashboard/services/product-dashboard.service',
+        'product-service':_basePath.modules +'product/services/product.service',
     },
     // angular does not support AMD out of the box, put it in a shim
     shim: {
@@ -65,10 +69,19 @@ require.config({
         'ui-tree':{
             deps:['angular']
         },
-        core:{deps: ['angular', 'ngRoute']},
+        'codemirror':{
+            deps:['angular']
+        },
+        'angular-summernote':{
+            deps:['angular']
+        },
+        summernote:{
+            deps:['codemirror', 'angular-summernote']
+        },
+        core:{deps: ['angular', 'ngRoute', 'slimscroll']},
         'excal-options':['jszip', 'ods', 'shim', 'xlsx'],
         goLive:{
-            deps: ['bootstrap', 'ui-bootstrap', 'underscore', 'core', 'slimscroll', 'ui-tree']
+            deps: ['bootstrap', 'ui-bootstrap', 'underscore', 'core', 'slimscroll', 'ui-tree', 'summernote']
         }
     },
     // kick start application

@@ -4,7 +4,7 @@
 (function(define, angular){
     "use strict";
     var core = angular.module('goLive.core', ['ngRoute']);
-    define(['angularAMD'], function (angularAMD) {
+    define(['angularAMD', 'slimscroll'], function (angularAMD) {
         var _coreBase = 'admin-js/core/templates/';
         var _viewOptions = {
             login: {
@@ -67,7 +67,7 @@
                     this.isLogged = false;
                     this.isAuthenticated = false,
 
-                    delete this.name;
+                        delete this.name;
                     delete this.user;
                     delete this.role;
                     delete this.token;
@@ -266,13 +266,93 @@
                         $scope.performCallBack()('delete', $scope.data);
                     });
                     /*$element.on('click', '.btn-white.tree', function(e){
-                        e.stopPropagation();
-                        $scope.performCallBack()('tree', $scope.treeData);
-                    });*/
+                     e.stopPropagation();
+                     $scope.performCallBack()('tree', $scope.treeData);
+                     });*/
                 }
             };
         }
 
+        function treeOperations() {
+            this.delete = function(scope) {
+                var nodeData = scope.$modelValue;
+                scope.removeNode(nodeData);
+            };
+            this.toggle = function(scope) {
+                scope.toggle();
+            };
+            this.edit = function(scope) {
+                var nodeData = scope.$modelValue;
+                if(nodeData) {
+                    nodeData['isNew'] = true;
+                }
+            };
+            this.save = function(scope) {
+                var nodeData = scope.$modelValue;
+                nodeData['isNew'] = false;
+                var _model = {
+                    id: nodeData.id,
+                    name: nodeData.name,
+                    parentId:nodeData.parentId
+                };
+            };
+            this.collapseAll = function(scope) {
+                scope.$broadcast('collapseAll');
+            };
+            this.expandAll = function(scope) {
+                scope.$broadcast('expandAll');
+            };
+            this.moveLastToTheBeginning = function (scope) {
+                var a = scope.data.pop();
+                scope.data.splice(0,0, a);
+            };
+            this.newSubItem = function(scope) {
+                var nodeData = scope.$modelValue;
+                if(nodeData) {
+                    var _model = {
+                        name: nodeData.name + '.' + (nodeData.child.length + 1),
+                        parentId: nodeData.id,
+                        child: []
+                    };
+                }
+            };
+            function treeModel(item){
+                var _item = {
+                    id: item.id,
+                    name: item.category,
+                    child:[],
+                    parentId: item.parentId
+                };
+                return _item;
+            }
+        }
+
+        function utility(){
+            var util = {
+                filter:{
+                    hierarchicalDataByKeyValue: function(source, key, id) {
+                        for (var keyItem in source)
+                        {
+                            var item = source[keyItem];
+                            if (item[key] == id)
+                                return item;
+                            // Item not returned yet. Search its children by recursive call.
+                            if (item.child)
+                            {
+                                var subresult = this.hierarchicalDataByKeyValue(item.child, key, id);
+
+                                // If the item was found in the subchildren, return it.
+                                if (subresult)
+                                    return subresult;
+                            }
+                        }
+                        // Nothing found yet? return null.
+                        return null;
+                    }
+                }
+            };
+            return util;
+        };
         /**
          *
          * Pass all functions into module
@@ -287,9 +367,9 @@
                 return {
                     restrict: 'A',
                     link: function(scope, element, attr) {
-                         scope.$watch('name', function() {
+                        scope.$watch('name', function() {
                             $timeout(function() { element.trigger('chosen:updated'); }, 0, false);
-                         }, true);
+                        }, true);
                         $timeout(function() { element.chosen(); }, 0, false);
                     }
                 };
@@ -339,59 +419,61 @@
 
             }])
             .factory("popupService", ['$q', "modalService", '$timeout', function ($q, modalService, $timeout) {
-            var modalDefaults = { backdrop: true, keyboard: true, modalFade: true, templateUrl: '', windowClass: 'default-popup' };
-            var _model = {};
-            _model.showPopup = function (template, model) {
-                modalDefaults.windowClass = 'default-popup';
-                modalDefaults.templateUrl = template;
-                return modalService.showModal(modalDefaults, model);
-            };
-            return _model;
-        }])
+                var modalDefaults = { backdrop: true, keyboard: true, modalFade: true, templateUrl: '', windowClass: 'default-popup' };
+                var _model = {};
+                _model.showPopup = function (template, model) {
+                    modalDefaults.windowClass = 'default-popup';
+                    modalDefaults.templateUrl = template;
+                    return modalService.showModal(modalDefaults, model);
+                };
+                return _model;
+            }])
             .service("modalService", ["$modal", function ($modal) {
-            var modalDefaults = {
-                backdrop: true,
-                keyboard: true,
-                modalFade: true,
-                templateUrl: '',
-                windowClass: ''
-            };
-            var modalOptions = {
-                closeButtonText: 'Close',
-                actionButtonText: 'OK',
-                headerText: 'Proceed?',
-                bodyText: 'Perform this action?'
-            };
-            this.showModal = function (customModalDefaults, customModalOptions) {
-                if (!customModalDefaults) customModalDefaults = {};
-                customModalDefaults.backdrop = 'static';
-                return this.show(customModalDefaults, customModalOptions);
-            };
+                var modalDefaults = {
+                    backdrop: true,
+                    keyboard: true,
+                    modalFade: true,
+                    templateUrl: '',
+                    windowClass: ''
+                };
+                var modalOptions = {
+                    closeButtonText: 'Close',
+                    actionButtonText: 'OK',
+                    headerText: 'Proceed?',
+                    bodyText: 'Perform this action?'
+                };
+                this.showModal = function (customModalDefaults, customModalOptions) {
+                    if (!customModalDefaults) customModalDefaults = {};
+                    customModalDefaults.backdrop = 'static';
+                    return this.show(customModalDefaults, customModalOptions);
+                };
 
-            this.show = function (customModalDefaults, customModalOptions) {
-                //Create temp objects to work with since we're in a singleton service
-                var tempModalDefaults = {};
-                var tempModalOptions = {};
+                this.show = function (customModalDefaults, customModalOptions) {
+                    //Create temp objects to work with since we're in a singleton service
+                    var tempModalDefaults = {};
+                    var tempModalOptions = {};
 
-                //Map angular-ui modal custom defaults to modal defaults defined in service
-                angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
+                    //Map angular-ui modal custom defaults to modal defaults defined in service
+                    angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
 
-                //Map modal.html $scope custom properties to defaults defined in service
-                angular.extend(tempModalOptions, modalOptions, customModalOptions);
+                    //Map modal.html $scope custom properties to defaults defined in service
+                    angular.extend(tempModalOptions, modalOptions, customModalOptions);
 
-                if (!tempModalDefaults.controller) {
-                    tempModalDefaults.controller = function ($scope, $modalInstance) {
-                        $scope.modalOptions = tempModalOptions;
-                        $scope.modalOptions.ok = function (result) {
-                            $modalInstance.close(result);
-                        };
-                        $scope.modalOptions.close = function (result) {
-                            $modalInstance.dismiss('cancel');
-                        };
+                    if (!tempModalDefaults.controller) {
+                        tempModalDefaults.controller = function ($scope, $modalInstance) {
+                            $scope.modalOptions = tempModalOptions;
+                            $scope.modalOptions.ok = function (result) {
+                                $modalInstance.close(result);
+                            };
+                            $scope.modalOptions.close = function (result) {
+                                $modalInstance.dismiss('cancel');
+                            };
+                        }
                     }
-                }
-                return $modal.open(tempModalDefaults).result;
-            };
-        }]);
+                    return $modal.open(tempModalDefaults).result;
+                };
+            }])
+            .service('treeOperations', treeOperations)
+            .factory('utility', utility);
     });
 })(window.define, window.angular);

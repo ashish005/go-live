@@ -4,16 +4,16 @@
 (function(define, angular){
     "use strict";
     define([window['appName']], function (app) {
-        app.service('dashboardService', ['$http',
-            function ($http)
+        app.service('dashboardService', ['$http', 'configUrl',
+            function ($http, configUrl)
             {
                 var _service = {
                     getAllCollections: function(){
-                        var _httpRequest = {method: 'GET', url: 'api/core/collections'};
+                        var _httpRequest = {method: 'GET', url: configUrl['core'] + 'collections'};
                        return $http(_httpRequest);
                     },
                     getActiveCollection: function(collectionName){
-                        var _httpRequest = {method: 'GET', url: 'api/core/collection/data', params:collectionName};
+                        var _httpRequest = {method: 'GET', url: configUrl['core'] +'collection/data', params:collectionName};
                         return $http(_httpRequest);
                     }
                 };

@@ -26,6 +26,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="tree-node tree-node-content" ng-model="node">
+                            <a class="pull-right btn btn-white btn-xs" data-nodrag ng-click="showInfo(this)"><span class="fa">Details</span></a>
                             <a class="pull-right btn btn-white btn-xs" data-nodrag ng-click="show(this)"><span class="fa">Show</span></a>
                             <a class="btn btn-primary btn-xs" data-nodrag ng-click="toggle(this)"><span class="fa" ng-class="{'fa-angle-down': collapsed, 'fa-angle-right': !collapsed}"></span></a>
                             <label ng-if="!node['isNew']">{{node['name']}}</label>

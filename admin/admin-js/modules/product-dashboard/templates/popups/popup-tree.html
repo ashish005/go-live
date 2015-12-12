@@ -8,8 +8,8 @@
             <div class="ibox float-e-margins" style="margin-top: -20px;">
                 <div class="ibox-title">
                     <div class="input-group ng-scope">
-                        <input class="input-sm form-control ng-pristine ng-valid ng-touched" type="text">
-                        <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary" data-nodrag="" ng-click="operation.save(this)"> Search!</button> </span>
+                        <input class="input-sm form-control ng-pristine ng-valid ng-touched" ng-model="searchTree" type="text">
+                        <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary"> Search!</button> </span>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -26,10 +26,10 @@
                             </div>
                         </div>
                         <ol ui-tree-nodes="" ng-model="node.child" ng-class="{hidden: collapsed}">
-                            <li ng-repeat="node in node.child" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+                            <li ng-repeat="node in node.child | filter:searchTree" data-nodrag ui-tree-node ng-include="'nodes_renderer.html'"></li>
                         </ol>
                     </script>
-                    <div ui-tree id="tree-root">
+                    <div ui-tree id="tree-root" data-nodrag>
                         <ol ui-tree-nodes ng-model="model['child']">
                             <li ng-repeat="node in model['child']" ui-tree-node ng-include="'nodes_renderer.html'"></li>
                         </ol>

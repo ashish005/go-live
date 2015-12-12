@@ -1,0 +1,3 @@
+use goLive
+db.core.drop()
+db.category.drop()

@@ -248,13 +248,7 @@
 
     }
 
-    core
-        .factory("popupService", ['$q', "modalService", popupService])
-        .service("modalService", ["$modal", modalService])
-        .directive('goLiveHeader', ['$location', goLiveHeader])
-        .factory('authenticationFactory', ["$window", authenticationFactory])
-        .factory('tokenInterceptor', ['$q', '$location', 'authenticationFactory', tokenInterceptor])
-        .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    function routeProvider ($routeProvider, $locationProvider) {
         $routeProvider
             .when('/login', _viewOptions['login'])
             .when('/register', _viewOptions['register'])
@@ -262,6 +256,35 @@
             .when('/lockscreen', _viewOptions['lockscreen'])
             .when('/400', _viewOptions['400'])
             .when('/500', _viewOptions['500'])
-    }])
+    };
+
+    function coreApis($http, $rootScope) {
+        var apis = {
+            coreBase:'http://localhost:4001/',
+            initApp: function(){
+                $http({method: 'GET', url: this.coreBase+ 'core'}).then(function (resp)
+                {
+                    core.constant('appInfo', resp['data']);
+                    $rootScope.appInfo = resp['data'];
+                }, function (error) {
+                    throw new Error('Core is not initialized : ' + error);
+                });
+            }
+        };
+
+        return apis;
+    };
+
+    core
+        .factory("popupService", ['$q', "modalService", popupService])
+        .service("modalService", ["$modal", modalService])
+        .directive('goLiveHeader', ['$location', goLiveHeader])
+        .factory('authenticationFactory', ["$window", authenticationFactory])
+        .factory('tokenInterceptor', ['$q', '$location', 'authenticationFactory', tokenInterceptor])
+        .config(['$routeProvider', '$locationProvider', routeProvider])
         .controller('authController', ['$scope', '$rootScope', '$http', '$location', 'authenticationFactory', authController])
+        .service("coreApis", ["$http", '$rootScope', coreApis])
+        .run(['coreApis',  function(coreApis) {
+            coreApis.initApp();
+        }]);
 })(window.define, window.angular);

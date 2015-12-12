@@ -10,7 +10,7 @@
         window.appName  = "goLive";
         var _appName = window.appName;
 
-        var app = angular.module(_appName, ['ui.bootstrap', 'ngRoute', 'goLive.core', 'ui.tree']);
+        var app = angular.module(_appName, ['ui.bootstrap', 'ngRoute', 'goLive.core', 'ui.tree', 'summernote']);
         var _baseModulesPath = {
             templateUrl:'admin-js/modules/',
             controllerUrl:'admin-js/modules/'
@@ -31,6 +31,13 @@
                     requiredLogin: true
                 },
             },
+            product:{
+                templateUrl: _baseModulesPath.templateUrl +'product/templates/product.html',
+                controllerUrl: _baseModulesPath.controllerUrl +'product/controllers/product.controller',
+                access: {
+                    requiredLogin: true
+                },
+            },
             productDashboard:{
                 templateUrl: _baseModulesPath.templateUrl +'product-dashboard/templates/product-dashboard.html',
                 controllerUrl: _baseModulesPath.controllerUrl +'product-dashboard/controllers/product-dashboard.controller',
@@ -39,7 +46,6 @@
                 },
             }
         };
-
 
         var popupView = {
             dashboard:{
@@ -57,6 +63,7 @@
             $routeProvider
                 .when('/dashboard', angularAMD.route(_adminRouteConfig.dashboard))
                 .when('/product-dashboard', angularAMD.route(_adminRouteConfig.productDashboard))
+                .when('/product/:key', angularAMD.route(_adminRouteConfig.product))
                 .when('/users', angularAMD.route(_adminRouteConfig.users))
                 .otherwise({redirectTo: '/login'});//Handle all exceptions
         };
@@ -112,20 +119,21 @@
             .config(['$routeProvider', '$locationProvider', routeConfig])
             .run(['$rootScope', 'authenticationFactory', run])
 
+        var baseSvcUrl = 'http://localhost:4000/api/'
+
         angular.element(document).ready(function () {
             var initInjector = angular.injector(["ng"]);
             var $http = initInjector.get("$http");
-            /*$http({method: 'GET', url: 'api/core'}).then(function (resp)
+            $http({method: 'GET', url: baseSvcUrl+'products'}).then(function (resp)
             {
-                app.constant('appInfo', resp.data[0]);
+                app.constant('appInfo', resp.data);
+                app.constant('configUrl', { core:'/core/' });
                 $('<div landing-scrollspy><div go-live-header></div><div ng-view></div></div>').appendTo('body');
                 return angular.bootstrap($('body'), [_appName]);
             }, function (error) {
                 throw new Error('Config file has error : ' + error);
-            });*/
-            app.constant('config', {baseSvcUrl:'http://localhost:4000/api/'});
-            $('<div landing-scrollspy><div go-live-header></div><div ng-view></div></div>').appendTo('body');
-            return angular.bootstrap($('body'), [_appName]);
+            });
+            app.constant('config', {baseSvcUrl:baseSvcUrl});
         });
         return app;
     });

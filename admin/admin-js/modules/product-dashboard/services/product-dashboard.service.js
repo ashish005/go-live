@@ -4,13 +4,14 @@
 (function(define, angular){
     "use strict";
     define([window['appName']], function (app) {
-        app.service('productDashboardService', ['$http', 'config',
-            function ($http, config)
+        app.service('productDashboardService', ['$http', 'config', 'appInfo', '$q',
+            function ($http, config, appInfo, $q)
             {
                 var _service = {
                     getCategories: function(){
-                        var _httpRequest = {method: 'GET', url: config['baseSvcUrl']+ 'products'};
-                       return $http(_httpRequest);
+                        var deferred = $q.defer();
+                        deferred.resolve({data:appInfo});
+                        return deferred.promise;
                     }
                 };
 
