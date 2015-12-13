@@ -39,6 +39,7 @@
         $routeProvider
             .when('/category', angularAMD.route(_viewOptions.category))
             .when('/product', angularAMD.route(_viewOptions.product))
+            .when('/product/:key', angularAMD.route(_viewOptions.product))
             .when('/', angularAMD.route(_viewOptions.home))
             .otherwise({redirectTo: '/'});
     }
@@ -86,7 +87,6 @@
         .config(config)
         .constant('popupView', popupViewOptions)
         .run(['$rootScope', 'menu',function($rootScope, menu) {
-
             $rootScope.productMenu = menu;
             $rootScope.$on("$routeChangeStart", function (event, nextRoute, currentRoute) {});
             $rootScope.$on('$routeChangeSuccess', function (event, nextRoute, currentRoute) {});

@@ -16,8 +16,8 @@
 
 
         app.get('/core', appSetupController.setupApp);
-        app.get('/core/signup', authController.signup);
-        app.get('/core/signin', authController.signin);
+        app.post('/core/signup', authController.signup);
+        app.post('/core/signin', authController.signin);
 
         app.get('/core/collections', function(req, res) {
              var db = mongoose.connection.db;

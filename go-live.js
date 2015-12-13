@@ -11,6 +11,7 @@ app.server.listen(4002, function () {
     console.log('I am listening ' + 4002);
 });
 
+app.server.use('/images', app.express.static(__dirname + '/images'));
 
 var admin = require('./server/admin')(); //Run Server
 admin.server.use('/', admin.express.static(__dirname + '/admin'));

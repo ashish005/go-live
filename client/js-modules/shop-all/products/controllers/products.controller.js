@@ -5,23 +5,14 @@
     "use strict";
     angular
         .module(window['name'])
-        .controller('productController', ['$scope', '$rootScope', '$q', '$compile','$routeParams', '$http', 'popupService', 'popupView',
-            function ($scope, $rootScope, $q, $compile, $routeParams, $http, popupService, popupView)
+        .controller('productController', ['$scope', '$rootScope', '$q', '$compile','$routeParams', '$http',
+            function ($scope, $rootScope, $q, $compile, $routeParams, $http)
             {
                 $scope.init = function (){};
                 $scope.products = new Array(40);
-
-                $(document).on('click', '.btn.btn-xs.btn-outline.btn-primary', function(e){
-                    e.stopPropagation();
-                    popupService.showPopup(popupView['product']['show'], {}).then(function(){
-
-                    }, function(){
-
-                    });
-                });
             }
         ])
-        .directive('product', function(){
+        .directive('product', ['popupService', 'popupView', function(popupService, popupView){
         return{
             scope:{
                 item:'='
@@ -32,9 +23,13 @@
                 <div class="product-imitation">[ INFO ]</div>\
                 <div class="product-desc"> <small class="text-muted">Category</small> <div class="small m-t-xs"> $10 </div> <div class="small m-t-xs"> Many desktop publishing packages and web page editors now. </div> </div>\
             </div>',
-            controller:function($scope){
-
+            controller:function($scope, $element){
+                $element.find('.btn.btn-xs.btn-outline.btn-primary').on('click', function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    popupService.showPopup(popupView['product']['show'], {}).then(function(){}, function(){});
+                });
             }
         };
-    });
+    }]);
 })(window.define, window.angular);

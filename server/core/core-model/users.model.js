@@ -25,8 +25,33 @@ module.exports = function(mongoose){
         token: {type: String, required: true, default:0}
     });
 
-    usersSchema.static('findAll', function (callback) {
-        this.find({}, {}).lean().exec(callback);
+    usersSchema.static('registerUser', function (req, callback) {
+        var _model = req.body;
+        this.count({email: _model.email}, function (err, count){
+            if(count>0){
+                //document exists });
+                callback(undefined ,{isSuccess:true, message:'You are already registered with us..!'});
+            }else{
+                this.findOne().sort('-id').exec(function(err, item) {
+                    var id = (item)? item.id+1:1;
+                    usersSchema({
+                        id: id,  // item.id is the max value
+                        name:_model.name,
+                        mobile :_model.mobile,
+                        email: _model.email,
+                        password : _model.password,
+                        confPassword : _model.confPassword,
+                        agreeWithTerms: _model.agreeWithTerms,
+                        createdBy: req.headers['referer'],
+                    }).save(function(err, doc) {
+                        if(err) {
+                            callback(err);
+                        }
+                        callback(undefined ,{isSuccess:true, message:'You registered with us succesfully..!'});
+                    });
+                });
+            }
+        });
     });
 
     usersSchema.static('signin', function (condition, callback) {

@@ -204,7 +204,7 @@
         };
     }
 
-    function authController($scope, $rootScope, $http, $location, authenticationFactory) {
+    function authController($scope, $rootScope, $http, $location, authenticationFactory, coreApis) {
         $scope.initLoginForm = function() {
             $scope.form = {
                 email: 'me.ashish005@gmail.com',
@@ -222,30 +222,16 @@
             }
         };
         $scope.submitRegisterForm = function() {
-            console.log("posting data....");
-            var _req = {method: 'POST', url: 'api/core/signup', data: $scope.form};
-            ajaxRequest(_req, function(data, status, headers, config) {
-                // this callback will be called asynchronously when the response is available.
-                $location.path('/login');
-            }, function(data, status, headers, config) {
-                // this callback will be called asynchronously when the response is available.
-            });
+            coreApis.registerUser($scope.form).then(function(data, status, headers, config){
+                    $location.path('/login');
+                }, function(error){});
         };
         $scope.submitLoginForm = function() {
-            var _req = {method: 'POST', url: 'api/core/signin', data: $scope.form};
-            ajaxRequest(_req, function(data, status, headers, config) {
+            coreApis.login($scope.form).then(function(data, status, headers, config){
                 authenticationFactory.setInfo(data['data']);
-                window.location.href = "shop-all";
-                //$location.path('/shop-all');// this callback will be called asynchronously when the response is available.
-            }, function(data, status, headers, config) {
-                console.log('error: ', data );// this callback will be called asynchronously when the response is available.
-            });
+                $location.path('/shop-all');
+            }, function(error){});
         };
-
-        function ajaxRequest(request ,successCallback, errorCallback){
-            $http(request).success(successCallback).error(errorCallback);
-        }
-
     }
 
     function routeProvider ($routeProvider, $locationProvider) {
@@ -258,17 +244,32 @@
             .when('/500', _viewOptions['500'])
     };
 
-    function coreApis($http, $rootScope) {
+    function coreApis($http, $rootScope, $location) {
+        function ajaxRequest(request){
+           return $http(request);
+        }
         var apis = {
-            coreBase:'http://localhost:4001/',
+            coreBase:'http://localhost:4001/core',
             initApp: function(){
-                $http({method: 'GET', url: this.coreBase+ 'core'}).then(function (resp)
+                var _req = {method: 'GET', url: this.coreBase};
+                $http(_req).then(function (resp)
                 {
                     core.constant('appInfo', resp['data']);
                     $rootScope.appInfo = resp['data'];
+                    /*if(resp['data']) {
+                        $location.path(resp['data']['landingPage']);
+                    }*/
                 }, function (error) {
                     throw new Error('Core is not initialized : ' + error);
                 });
+            },
+            registerUser:function(data){
+                var _req = {method: 'POST', url: this.coreBase+'/signup', data: data};
+                return ajaxRequest(_req);
+            },
+            login:function(data){
+                var _req = {method: 'POST', url: this.coreBase+'/signin', data: data};
+                return ajaxRequest(_req);
             }
         };
 
@@ -282,8 +283,8 @@
         .factory('authenticationFactory', ["$window", authenticationFactory])
         .factory('tokenInterceptor', ['$q', '$location', 'authenticationFactory', tokenInterceptor])
         .config(['$routeProvider', '$locationProvider', routeProvider])
-        .controller('authController', ['$scope', '$rootScope', '$http', '$location', 'authenticationFactory', authController])
-        .service("coreApis", ["$http", '$rootScope', coreApis])
+        .controller('authController', ['$scope', '$rootScope', '$http', '$location', 'authenticationFactory', 'coreApis', authController])
+        .service("coreApis", ["$http", '$rootScope', '$location', coreApis])
         .run(['coreApis',  function(coreApis) {
             coreApis.initApp();
         }]);
